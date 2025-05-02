@@ -2,6 +2,8 @@
 
 A simple, self-contained web application built with PHP (backend proxy), HTML, CSS (Tailwind CSS), and JavaScript that leverages the Google Gemini API to generate interactive multiple-choice general knowledge questions on demand.
 
+# Demo- https://project.owntweet.com/quiz/
+
 ## ✨ Features
 
 *   **AI-Powered Questions:** Generates unique multiple-choice questions using the Google Gemini (`gemini-2.0-flash`) API.
