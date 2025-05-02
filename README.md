@@ -73,14 +73,14 @@ The project is structured into four main files:
 
 ├── .env         
 ├── index.html   
-├── script.js    
+├── scripts.js    
 └── api.php      
-
+└── style.css
 
 *   `index.html`: Contains the main HTML structure of the quiz interface. It links to the CSS and JavaScript files.
 *   `style.css`: Contains all the custom CSS rules and overrides for styling the application elements (in addition to Tailwind CSS).
-*   `script.js`: Holds all the frontend JavaScript logic, including fetching questions from `api.php`, handling user interactions, managing the timer, scores, history, and browser Local Storage.
-*   `api.php`: This is the backend script. It loads the API key from the `.env` file, listens for `POST` requests from `script.js`, constructs the request to the Google Gemini API, parses the API response, and returns the question data as JSON.
+*   `scripts.js`: Holds all the frontend JavaScript logic, including fetching questions from `api.php`, handling user interactions, managing the timer, scores, history, and browser Local Storage.
+*   `api.php`: This is the backend script. It loads the API key from the `.env` file, listens for `POST` requests from `scripts.js`, constructs the request to the Google Gemini API, parses the API response, and returns the question data as JSON.
 
 ## 🤝 Contributing
 
