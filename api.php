@@ -5,7 +5,7 @@
 // Replace 'YOUR_API_KEY' with your actual Gemini API key.
 // For better security, consider storing this key outside the web root
 // or using environment variables in production.
-$api_key = 'AIzaSyAn7tAWqTGMCKeIKwT-UKjKWyzZHyPXGz0';
+$api_key = 'YOUR_API_KEY';
 
 // Handle API request (only POST requests will trigger this)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
