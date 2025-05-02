@@ -406,4 +406,139 @@ function showHistory() {
             if (entry.userAnswer === "Timeout") {
                  userFeedback.innerHTML = '<span class="text-orange-400 font-semibold">⏳ Timed Out/Skipped.</span>'; // Orange for timeout/skip
             } else if (entry.userAnswer !== undefined && entry.userAnswer !== null && entry.userAnswer !== '') { // Check if userAnswer is not null/empty
-                userFeedback.innerHTML = `<span class="${entry.isCorrect ? 'text-green-400' : 'text-red-400'} font-semibold">${entry.isCorrect ? '✅ Your Answer:' : '❌ Your Answer:'}</spa
+                userFeedback.innerHTML = `<span class="${entry.isCorrect ? 'text-green-400' : 'text-red-400'} font-semibold">${entry.isCorrect ? '✅ Your Answer:' : '❌ Your Answer:'}</span> ${entry.userAnswer}`;
+            } else {
+                 // Handle case where user_answer might be missing (e.g., a very old history entry format)
+                 userFeedback.innerHTML = '<span class="text-gray-500 font-semibold">No Answer Given.</span>';
+            }
+            answersEl.appendChild(userFeedback);
+
+            // Correct Answer (always show if timed out or user was wrong)
+             if (entry.userAnswer === "Timeout" || !entry.isCorrect) {
+                const correctFeedback = document.createElement('p');
+                // Ensure correct answer is available before displaying
+                if (entry.correctAnswer) {
+                   correctFeedback.innerHTML = `<span class="text-green-400 font-semibold">Correct Answer:</span> ${correctLetter ? `${correctLetter}) ` : ''}${entry.correctAnswer}`;
+                } else {
+                    // Fallback if correct answer is missing from history entry
+                    correctFeedback.innerHTML = '<span class="text-gray-500 font-semibold">Correct Answer:</span> N/A (data missing)';
+                }
+                answersEl.appendChild(correctFeedback);
+            }
+
+            contentDiv.appendChild(answersEl);
+            entryElement.appendChild(contentDiv);
+
+             // Delete Button (using an SVG trash icon for better appearance)
+             const deleteButton = document.createElement('button');
+             deleteButton.classList.add('delete-history-btn');
+             // Trashcan SVG icon from Phosphor Icons (simplified path)
+             deleteButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <path d="M216 48h-40V36a28 28 0 0 0-28-28H108A28 28 0 0 0 80 36v12H40a12 12 0 0 0 0 24h4v136a20 20 0 0 0 20 20h88a20 20 0 0 0 20-20V72h4a12 12 0 0 0 0-24ZM108 36a4 4 0 0 1 4-4h40a4 4 0 0 1 4 4v12H108ZM184 208a4 4 0 0 1-4 4H76a4 4 0 0 1-4-4V72h112Z"/>
+                </svg>
+             `;
+             deleteButton.title = 'Delete this history entry'; // Tooltip for accessibility
+             deleteButton.setAttribute('aria-label', 'Delete this history entry'); // ARIA label
+             deleteButton.dataset.indexToDelete = originalIndex; // Store the original index
+
+             // Add click listener to delete button
+             deleteButton.addEventListener('click', (event) => {
+                 // Use closest to get the button itself, in case the SVG path is clicked
+                 const btn = event.target.closest('.delete-history-btn');
+                 if (btn) {
+                      const index = parseInt(btn.dataset.indexToDelete);
+                      if (!isNaN(index)) {
+                          deleteHistoryEntry(index);
+                      }
+                 }
+             });
+             entryElement.appendChild(deleteButton);
+
+            elements.historyList.appendChild(entryElement);
+        });
+    }
+
+    elements.historyModal.classList.remove('hidden');
+     // Add class to slide in
+    elements.historyModal.querySelector('.history-modal-panel').classList.add('translate-x-0');
+    elements.historyModal.querySelector('.history-modal-panel').classList.remove('translate-x-full');
+}
+
+function hideHistory() {
+     // Add class to slide out
+     elements.historyModal.querySelector('.history-modal-panel').classList.remove('translate-x-0');
+     elements.historyModal.querySelector('.history-modal-panel').classList.add('translate-x-full');
+
+     // Hide modal after animation
+     elements.historyModal.querySelector('.history-modal-panel').addEventListener('transitionend', function handler() {
+         elements.historyModal.classList.add('hidden');
+         elements.historyModal.querySelector('.history-modal-panel').removeEventListener('transitionend', handler);
+     }, { once: true }); // Use { once: true } to automatically remove the listener
+}
+
+
+function updateScores() {
+  elements.correctCount.textContent = correctCount;
+  elements.wrongCount.textContent = wrongCount;
+  saveToStorage(); // Save state whenever scores update (or prompt changes)
+}
+
+// --- Event Listeners ---
+
+// --- MODIFIED CLICK HANDLER FOR NEXT BUTTON ---
+elements.nextBtn.addEventListener('click', () => {
+    if (!isAnswered) {
+        // If the question hasn't been answered, treat 'Next' click as a skip/timeout
+        handleTimeout(); // This updates scores, history, disables options, etc.
+        // After handling the skip state, immediately fetch the next question
+        fetchQuestion();
+    } else {
+        // If the question has already been answered, just fetch the next question
+        fetchQuestion();
+    }
+});
+
+
+elements.historyBtn.addEventListener('click', showHistory);
+elements.closeHistory.addEventListener('click', hideHistory);
+
+elements.submitPrompt.addEventListener('click', () => {
+  const newPrompt = elements.customPrompt.value.trim();
+  // Always save the new prompt, even if empty, as it affects the next fetch
+  currentPrompt = newPrompt;
+  elements.customPrompt.value = ''; // Clear the input field
+  saveToStorage(); // Save the new prompt immediately
+  // When setting a new topic, immediately fetch the question for that topic.
+  // If the previous question was unanswered, handle it as a skip first.
+  if (!isAnswered && currentQuestionData && currentQuestionData.question) {
+       handleTimeout(); // Handle the previous question as skipped
+       // handleTimeout won't auto-fetch here because we're about to manually fetch
+       // the new topic's question right here.
+       fetchQuestion(); // Fetch the new question for the set topic
+   } else {
+        // If already answered or no question loaded, just fetch the new topic's question
+        fetchQuestion();
+   }
+});
+
+
+// Allow pressing Enter in the custom prompt input
+elements.customPrompt.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent default form submission (if applicable)
+        elements.submitPrompt.click(); // Trigger the button click handler
+    }
+});
+
+ // Close history modal when clicking outside the panel
+elements.historyModal.addEventListener('click', (event) => {
+    // Check if the click is directly on the modal background, not inside the panel
+    if (event.target === elements.historyModal) {
+        hideHistory();
+    }
+});
+
+// --- Initial Load ---
+loadFromStorage(); // Load scores, history, and prompt on page load
+fetchQuestion(); // Fetch the first question
