@@ -1,11 +1,37 @@
 <?php
 // api.php
 
-// !! IMPORTANT !!
-// Replace 'YOUR_API_KEY' with your actual Gemini API key.
-// For better security, consider storing this key outside the web root
-// or using environment variables in production.
-$api_key = 'YOUR_API_KEY';
+// --- Load Environment Variables from .env file ---
+// This is a simple manual way to load a .env file.
+// For more robust solutions in larger projects, consider libraries like vlucas/phpdotenv.
+if (file_exists(__DIR__ . '/.env')) {
+    $lines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        // Skip comments
+        if (strpos(trim($line), '#') === 0) {
+            continue;
+        }
+
+        // Only process lines with a '='
+        list($name, $value) = explode('=', $line, 2);
+        $name = trim($name);
+        $value = trim($value);
+
+        // Set environment variable if not already set
+        if (!isset($_SERVER[$name]) && !isset($_ENV[$name])) {
+            putenv(sprintf('%s=%s', $name, $value));
+            $_ENV[$name] = $value;
+            $_SERVER[$name] = $value;
+        }
+    }
+}
+// --- End Load Environment Variables ---
+
+
+// Get API key from environment variables
+// Use $_ENV or getenv()
+$api_key = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY');
+
 
 // Handle API request (only POST requests will trigger this)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // ["category" => "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold" => "BLOCK_ONLY_HIGH"],
     ];
 
-    // Check if API key is set
-    if ($api_key === 'YOUR_API_KEY' || empty($api_key)) {
-         echo json_encode(["error" => "API key not configured. Please replace 'YOUR_API_KEY' in the api.php file."]);
+    // Check if API key is set or is the placeholder
+    if (empty($api_key) || $api_key === 'YOUR_API_KEY') { // Check against empty and the old placeholder just in case
+         echo json_encode(["error" => "API key not configured. Please create a '.env' file in the same directory and set the GEMINI_API_KEY variable, or set it via web server configuration."]);
          exit;
     }
 
