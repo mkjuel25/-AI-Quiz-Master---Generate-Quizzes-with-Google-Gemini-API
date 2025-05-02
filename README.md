@@ -22,7 +22,7 @@ Here are a couple of screenshots showing the application in action:
 ![Screenshot of Main Quiz Interface](images/screenshot_1.png) <!-- IMPORTANT: Replace images/screenshot_1.png with the actual path to your first screenshot -->
 
 **Quiz Interface (After Answering) and History Modal**
-![Screenshot of Quiz Interface after Answering and History Modal](images/screenshot_2.png) <!-- IMPORTANT: Replace images/screenshot_2.png with the actual path to your second screenshot -->
+![Screenshot of Quiz Interface after Answering and History Modal]([images/screenshot_2.png]([https://takfe.com/uploads/stories/img/1746169971.jpg](https://takfe.com/uploads/stories/img/1746170002.jpg))) <!-- IMPORTANT: Replace images/screenshot_2.png with the actual path to your second screenshot -->
 
 ## 🚀 Technologies Used
 
