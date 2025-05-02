@@ -19,7 +19,7 @@ A simple, self-contained web application built with PHP (backend proxy), HTML, C
 Here are a couple of screenshots showing the application in action:
 
 **Main Quiz Interface (Before Answering)**
-![Screenshot of Main Quiz Interface](images/images/IMG_20250502_123340.jpg) <!-- IMPORTANT: Replace images/screenshot_1.png with the actual path to your first screenshot -->
+![Screenshot of Main Quiz Interface](images/IMG_20250502_123340.jpg) <!-- IMPORTANT: Replace images/screenshot_1.png with the actual path to your first screenshot -->
 
 **Quiz Interface (After Answering) and History Modal**
 ![Screenshot of Quiz Interface after Answering and History Modal](images/IMG_20250502_123249.jpg) <!-- IMPORTANT: Replace images/screenshot_2.png with the actual path to your second screenshot -->
