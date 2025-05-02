@@ -13,6 +13,14 @@ A simple, self-contained web application built with PHP, HTML, CSS (Tailwind CSS
 *   **Skip Functionality:** Users can click "Next Question! 👉" before answering to skip the current question (which counts as incorrect).
 *   **Loading State:** Visual feedback during question fetching using a skeleton loader and progress bar.
 
+  
+##  📸 Screenshots
+
+Here are a couple of screenshots showing the application in action:
+
+**Main Quiz Interface (Before Answering)**
+![Screenshot of Main Quiz Interface](images/screenshot_1.png) <!-- Replace images/screenshot_1.png with the actual path to your first screenshot -->
+
 ## 🚀 Technologies Used
 
 *   **Backend:** PHP (for making API calls to Google Gemini)
